@@ -60,6 +60,7 @@ var app = new Clarifai.App('hLLhJ3UJTAx9qj9Acg2OXR5pYWNX2siyE2cDn31T', 'ltt-jTCU
 var sentiment = require('sentiment');   
 var filters = [];
 var adminID = [];
+var userdata = [];
 function analysis(sentence) {   
 	var cent = sentiment(sentence);
 	return cent; 
@@ -84,6 +85,7 @@ controller.on('rtm_open', function(bot,message){
 	bot.api.users.list({}, function(err, response){
 		for(var i = 0; i < response['members'].length; i++){
 			if(response['members'][i]['is_admin'])adminID.push(response['members'][i]['id']);	
+			userdata[response['members'][i]['id']] = response['members'][i]['name'];
 		}
 		console.log(adminID);
 	});
@@ -99,6 +101,13 @@ controller.on('ambient',function(bot,message) {
 				//for( concept in response['outputs'][0]['data']['concepts']){
 					if(filters.indexOf(response['outputs'][0]['data']['concepts'][i]['name']) > -1){
 						bot.reply(message, "This content has been deemed inappropriate by the admins. \nReason: " + response['outputs'][0]['data']['concepts'][i]['name']);  
+						var tempMessage = message;
+						for(var j=0;j<adminID.length;j++){
+							var context = {user : adminID[j], channel : message.channel};
+							bot.startPrivateConversation(context, function(err, dm){
+								dm.say("A picture sent by " + userdata[tempMessage.user] + "in the slack channel has been flagged for inappropriate material");
+							});
+						}
 						break;
 						//console.log('Yes');
 					}
