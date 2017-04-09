@@ -1,2 +1,2 @@
 # goodbot
-token=<token> node goodbot/goodbot.js
+token=\<token\> node goodbot/goodbot.js
