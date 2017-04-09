@@ -105,7 +105,7 @@ controller.on('ambient',function(bot,message) {
 						for(var j=0;j<adminID.length;j++){
 							var context = {user : adminID[j], channel : message.channel};
 							bot.startPrivateConversation(context, function(err, dm){
-								dm.say("A picture sent by " + userdata[tempMessage.user] + "in the slack channel has been flagged for inappropriate material");
+								dm.say("A picture sent by " + userdata[tempMessage.user] + " in the slack channel has been flagged for inappropriate material");
 							});
 						}
 						break;
